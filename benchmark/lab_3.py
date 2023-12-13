@@ -1,5 +1,6 @@
 import json
 from io import StringIO
+import statistics 
 import time
 import psycopg2
 import sqlite3
@@ -38,22 +39,22 @@ def uploading_to_a_engine(engine,data):
     df.to_sql('trips',engine,if_exists='replace', index=False,chunksize=100000)
 
 def measurement_time(queries,cursor):
-    n=10
+    n=1
     result=[]
     for query in queries:
-        avg = 0
+        res=[]
         for _ in range(n):
             t0 = time.perf_counter()
             query(cursor)
-            avg+=time.perf_counter() - t0
-        result.append(avg/n)
+            res.append(time.perf_counter() - t0)
+        result.append(statistics.median(res))
     return result
 
 
 def psycopg2_test(conf):
     engine = create_engine('postgresql://postgres:postgres@localhost:5432/postgres', echo=False)
     if conf["psycopg2"]["loading the database"] == "True":
-        data = 'data/nyc_yellow_big.csv'
+        data = conf["DB"]
         uploading_to_a_engine(engine, data)
        
     conn = psycopg2.connect(user="postgres", password="postgres", host="localhost", port="5432")
@@ -65,10 +66,10 @@ def psycopg2_test(conf):
 
 
 def SQLite_test(conf):
-    conn = sqlite3.connect('C:/Users/User/PycharmProjects/lab3/data/data_sqlite.db') 
+    conn = sqlite3.connect('data/data_sqlite.db') 
     cursor = conn.cursor()
     if conf["SQLite"]["loading the database"] == "True":
-        data = 'data/nyc_yellow_big.csv'
+        data = conf["DB"]
         uploading_to_a_engine(conn, data)
     result=measurement_time(queries_sqlite3,cursor)
     cursor.close()
@@ -77,11 +78,11 @@ def SQLite_test(conf):
     
 
 def DuckDB_test(conf):
-    conn = duckdb.connect('C:/Users/User/PycharmProjects/lab3/data/data_DuckDB.db') 
+    conn = duckdb.connect('data/data_DuckDB.db') 
     cursor = conn.cursor()
     if conf["DuckDB"]["loading the database"] == "True":
-        data = "'data/nyc_yellow_big.csv'"
-        cursor.execute(f"CREATE TABLE IF NOT EXISTS trips AS SELECT * FROM read_csv_auto({data});")
+        data = conf["DB"]
+        cursor.execute(f"CREATE TABLE IF NOT EXISTS trips AS SELECT * FROM read_csv_auto('{data}');")
     result=measurement_time(queries, cursor)
     cursor.close()
     conn.close()
@@ -124,7 +125,7 @@ def SQLAlchemy_test(conf):
 
     engine = create_engine('postgresql://postgres:postgres@localhost:5432/postgres', echo=False)
     if conf["SQLAlchemy"]["loading the database"] == "True":
-        data = 'data/nyc_yellow_big.csv'
+        data = conf["DB"]
         uploading_to_a_engine(engine, data)
     Session = sessionmaker(bind = engine,autoflush=False,autocommit = False)
     session = Session()
@@ -134,7 +135,7 @@ def SQLAlchemy_test(conf):
     return result
 
 def Pandas_test(conf):
-    data = 'data/nyc_yellow_big.csv'
+    data = conf["DB"]
     df = pd.read_csv(data)
     result=measurement_time(queries_Pandas,df)
     return result
