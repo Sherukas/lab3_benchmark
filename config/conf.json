@@ -1,0 +1,22 @@
+{
+    "psycopg2": {
+        "start": "True",
+        "loading the database": "No"
+    },
+    "SQLite":{
+        "start": "True",
+        "loading the database": "No"
+    },
+    "DuckDB":{
+        "start": "True",
+        "loading the database": "No"
+    },
+    "SQLAlchemy":{
+        "start": "True",
+        "loading the database": "No"
+    },
+    "Pandas":{
+        "start": "True",
+        "loading the database": "None"
+    }
+}
