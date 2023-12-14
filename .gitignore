@@ -1,5 +1,5 @@
 .postgresql
 .pgadmin
 data
-res.csv
 docker-compose.yaml
+results

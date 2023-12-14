@@ -19,5 +19,6 @@
         "start": "True",
         "loading the database": "None"
     },
-    "DB": "data/nyc_yellow_big.csv"
+    "DB": "data/nyc_yellow_big.csv",
+    "number of tests": 0
 }
