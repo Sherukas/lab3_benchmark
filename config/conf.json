@@ -1,24 +1,24 @@
 {
     "psycopg2": {
         "start": "True",
-        "loading the database": "No"
+        "loading the database": "True"
     },
     "SQLite":{
         "start": "True",
-        "loading the database": "No"
+        "loading the database": "True"
     },
     "DuckDB":{
         "start": "True",
-        "loading the database": "No"
+        "loading the database": "True"
     },
     "SQLAlchemy":{
         "start": "True",
-        "loading the database": "No"
+        "loading the database": "True"
     },
     "Pandas":{
         "start": "True",
         "loading the database": "None"
     },
     "DB": "data/nyc_yellow_big.csv",
-    "number of tests": 0
+    "number of tests": 15
 }
